@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AuthCM.Application.Dtos;
+using AuthCM.Application.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,23 +13,29 @@ namespace AuthCM.Api.Controllers.Auth
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IUsuarioService _usuarioService;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager userManager, IConfiguration configuration)
+        public AuthController(UserManager<IdentityUser> userManager, IUsuarioService usuarioService, IConfiguration configuration)
         {
             _userManager = userManager;
+            _usuarioService = usuarioService;
             _configuration = configuration;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] UsuarioCriarDto dto)
         {
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded) return BadRequest(result.Errors);
-            return Ok("Usuário criado com sucesso!");
+            try
+            {
+                var idUsuario = await _usuarioService.CriarUsuarioAsync(dto);
+                return Ok(new { IDUsuario = idUsuario });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("login")]
@@ -64,6 +72,5 @@ namespace AuthCM.Api.Controllers.Auth
         }
     }
 
-    public record RegisterModel(string Email, string Password);
     public record LoginModel(string Email, string Password);
 }

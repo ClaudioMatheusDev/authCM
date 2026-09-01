@@ -20,19 +20,23 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
-//Configuração do IdentityCore
-builder.Services.AddIdentityCore(options =>
+//Configuracao do IdentityCore
+var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "Chavinha_super_secreta";
+var key = Encoding.ASCII.GetBytes(jwtSecret);
+
+builder.Services.AddIdentityCore<IdentityUser>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = true;
-}).AddRoles().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders(jwtSecret);
-
-var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "Chavinha_super_secreta";
-var key = Encoding.ASCII.GetBytes(jwtSecret);
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;

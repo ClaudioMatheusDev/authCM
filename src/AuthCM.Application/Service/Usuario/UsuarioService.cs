@@ -1,6 +1,7 @@
 ﻿using AuthCM.Application.Dtos;
 using AuthCM.Application.Interfaces;
 using AuthCM.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace AuthCM.Application.Service
 {
@@ -8,15 +9,30 @@ namespace AuthCM.Application.Service
     {
 
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository)
+        public UsuarioService(IUsuarioRepository usuarioRepository, UserManager<IdentityUser> userManager)
         {
             _usuarioRepository = usuarioRepository;
+            _userManager = userManager;
         }
 
 
         public async Task<int> CriarUsuarioAsync(UsuarioCriarDto dto)
         {
+            var identityUser = new IdentityUser
+            {
+                UserName = dto.Email,
+                Email = dto.Email
+            };
+
+            var identityResult = await _userManager.CreateAsync(identityUser, dto.Password);
+
+            if (!identityResult.Succeeded)
+            {
+                throw new Exception(string.Join(" ", identityResult.Errors.Select(e => e.Description)));
+            }
+
             var usuario = new Usuario
             {
                 Nome = dto.Nome,
@@ -24,12 +40,20 @@ namespace AuthCM.Application.Service
                 Email = dto.Email,
                 Documento = dto.Documento,
                 Telefone = dto.Telefone,
-                DataCriacao = DateTime.UtcNow
+                DataCriacao = DateTime.UtcNow,
+                IdentityUserId = identityUser.Id
             };
 
-            await _usuarioRepository.AdicionarUsuarioAsync(usuario);
-
-            await _usuarioRepository.SalvarAlteracoesAsync();
+            try
+            {
+                await _usuarioRepository.AdicionarUsuarioAsync(usuario);
+                await _usuarioRepository.SalvarAlteracoesAsync();
+            }
+            catch
+            {
+                await _userManager.DeleteAsync(identityUser);
+                throw;
+            }
 
             return usuario.IDUsuario;
 
@@ -87,6 +111,16 @@ namespace AuthCM.Application.Service
             _usuarioRepository.Remover(usuario);
             await _usuarioRepository.SalvarAlteracoesAsync();
 
+            if (usuario.IdentityUserId is not null)
+            {
+                var identityUser = await _userManager.FindByIdAsync(usuario.IdentityUserId);
+
+                if (identityUser is not null)
+                {
+                    await _userManager.DeleteAsync(identityUser);
+                }
+            }
+
             return true;
         }
 
@@ -96,8 +130,25 @@ namespace AuthCM.Application.Service
 
             if (usuario is null)
                 {
-                 throw new Exception("Não foi encontrado nenhum usuario.");  
+                 throw new Exception("Não foi encontrado nenhum usuario.");
                 }
+
+            if (usuario.IdentityUserId is not null && !string.Equals(usuario.Email, dto.Email, StringComparison.OrdinalIgnoreCase))
+            {
+                var identityUser = await _userManager.FindByIdAsync(usuario.IdentityUserId);
+
+                if (identityUser is not null)
+                {
+                    var emailResult = await _userManager.SetEmailAsync(identityUser, dto.Email);
+                    var userNameResult = await _userManager.SetUserNameAsync(identityUser, dto.Email);
+
+                    if (!emailResult.Succeeded || !userNameResult.Succeeded)
+                    {
+                        var erros = emailResult.Errors.Concat(userNameResult.Errors).Select(e => e.Description);
+                        throw new Exception(string.Join(" ", erros));
+                    }
+                }
+            }
 
             usuario.Nome = dto.Nome;
             usuario.DataNascimento = dto.DataNascimento;

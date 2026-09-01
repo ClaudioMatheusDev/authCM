@@ -18,13 +18,16 @@ namespace AuthCM.Api.Controllers.Usuario
         [HttpPost]
         public async Task<IActionResult> CriarUsuario([FromBody] UsuarioCriarDto dto)
         {
-            var idUsuario = await _usuarioService.CriarUsuarioAsync(dto);
-
-            return Ok
-            (new
+            try
             {
-                IDUsuario = idUsuario
-            });
+                var idUsuario = await _usuarioService.CriarUsuarioAsync(dto);
+
+                return Ok(new { IDUsuario = idUsuario });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -46,17 +49,31 @@ namespace AuthCM.Api.Controllers.Usuario
         [HttpDelete("{IDUsuario:int}")]
         public async Task<IActionResult> DeletarUsuario(int IDUsuario)
         {
-            var usuario = await _usuarioService.ApagarUsuarioAsync(IDUsuario);
+            try
+            {
+                var usuario = await _usuarioService.ApagarUsuarioAsync(IDUsuario);
 
-            return Ok(usuario); 
+                return Ok(usuario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{IDUsuario:int}")]
         public async Task<IActionResult> AtualizarUsuario(int IDUsuario, UsuarioAtualizarDto dto)
         {
-            var usuario = await _usuarioService.AtualizarUsuarioAsync(IDUsuario, dto);
+            try
+            {
+                var usuario = await _usuarioService.AtualizarUsuarioAsync(IDUsuario, dto);
 
-            return Ok(usuario);
+                return Ok(usuario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
