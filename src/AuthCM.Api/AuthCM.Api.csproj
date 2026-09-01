@@ -22,4 +22,8 @@
     <ProjectReference Include="..\AuthCM.Infraestructure\AuthCM.Infraestructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Cliente\" />
+  </ItemGroup>
+
 </Project>

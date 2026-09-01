@@ -1,6 +1,5 @@
 ﻿using AuthCM.Application.Dtos;
-using AuthCM.Application.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using AuthCM.Application.Interfaces.Services.Produto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthCM.Api.Controllers.Produto

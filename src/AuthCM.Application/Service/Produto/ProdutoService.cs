@@ -1,6 +1,7 @@
 ﻿using AuthCM.Application.Dtos;
 using AuthCM.Domain.Entities;
 using AuthCM.Application.Interfaces;
+using AuthCM.Application.Interfaces.Services.Produto;
 
 namespace AuthCM.Application.Service
 {

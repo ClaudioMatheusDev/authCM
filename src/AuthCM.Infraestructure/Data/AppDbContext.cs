@@ -11,5 +11,6 @@ namespace AuthCM.Infraestructure.Data
         }
 
         public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
     }
 }

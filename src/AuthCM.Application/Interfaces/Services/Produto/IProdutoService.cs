@@ -1,6 +1,6 @@
 ﻿using AuthCM.Application.Dtos;
 
-namespace AuthCM.Application.Interfaces
+namespace AuthCM.Application.Interfaces.Services.Produto
 {
     public interface IProdutoService
     {
