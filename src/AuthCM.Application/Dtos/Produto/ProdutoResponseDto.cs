@@ -1,6 +1,6 @@
 ﻿namespace AuthCM.Application.Dtos
 {
-    public interface ProdutoResponseDto
+    public class ProdutoResponseDto
     {
         public int IDProduto { get; set; }
         public string NomeProduto { get; set; }

@@ -1,4 +1,5 @@
-﻿using MicroSoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using AuthCM.Domain.Entities;
 
 namespace AuthCM.Infraestructure.Data
 {

@@ -1,6 +1,9 @@
-﻿using AuthCM.Infraestructure.Data;
+﻿using AuthCM.Application.Interfaces;   
+using AuthCM.Domain.Entities;         
+using Microsoft.EntityFrameworkCore;
+using AuthCM.Infraestructure.Data;
 
-namespace AuthCM.Infraestructure.Repository.Produto
+namespace AuthCM.Infraestructure.Repository
 {
     public class ProdutoRepository : IProdutoRepository
     {
@@ -11,7 +14,7 @@ namespace AuthCM.Infraestructure.Repository.Produto
             _context = context;
         }
 
-        public async Task AdicionarProduto(Produto produto)
+        public async Task CriarProdutoAsync(Produto produto)
         {
             await _context.Produtos.AddAsync(produto);
         }
@@ -36,9 +39,9 @@ namespace AuthCM.Infraestructure.Repository.Produto
             _context.Produtos.Update(produto);
         }
 
-        public async async SalvarAlteracoesAsync()
+        public async Task SalvarAlteracoesAsync()
         {
-            await _context.Produtos.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

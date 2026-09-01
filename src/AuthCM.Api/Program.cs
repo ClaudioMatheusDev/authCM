@@ -1,3 +1,10 @@
+using AuthCM.Application.Interfaces;
+using AuthCM.Application.Service;
+using AuthCM.Infraestructure.Data;
+using AuthCM.Infraestructure.Repository;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +16,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
+
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -22,6 +34,6 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-app.MapHealthChecks("/health");
+//app.MapHealthChecks("/health");
 
 app.Run();

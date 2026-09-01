@@ -7,7 +7,7 @@ namespace AuthCM.Application.Interfaces
         Task<Produto> BuscarProdutoPorIDAsync(int IDProduto);
         Task<List<Produto>> BuscarTodosProdutos();
 
-        Task AdicionarProduto(Produto produto);
+        Task CriarProdutoAsync(Produto produto);
         void Atualizar(Produto produto);
         void Remover(Produto produto);
         Task SalvarAlteracoesAsync();

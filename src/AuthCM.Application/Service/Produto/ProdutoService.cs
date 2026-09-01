@@ -1,4 +1,5 @@
 ﻿using AuthCM.Application.Dtos;
+using AuthCM.Domain.Entities;
 using AuthCM.Application.Interfaces;
 
 namespace AuthCM.Application.Service
@@ -19,10 +20,10 @@ namespace AuthCM.Application.Service
                 NomeProduto = dto.NomeProduto,
                 Descricao = dto.Descricao,
                 ValorProduto = dto.ValorProduto,
-                DataCriacao = DateTime.UtcNow()
+                DataCriacao = DateTime.UtcNow
             };
 
-            await _produtoRepository.AdicionarProdutoAsync(produto);
+            await _produtoRepository.CriarProdutoAsync(produto);
 
             await _produtoRepository.SalvarAlteracoesAsync();
 
@@ -49,7 +50,7 @@ namespace AuthCM.Application.Service
             var produto = await _produtoRepository.BuscarTodosProdutos();
 
 
-            return new ProdutoResponseDto
+            return produto.Select(produto => new ProdutoResponseDto
             {
                 IDProduto = produto.IDProduto,
                 NomeProduto = produto.NomeProduto,
@@ -57,7 +58,7 @@ namespace AuthCM.Application.Service
                 ValorProduto = produto.ValorProduto,
                 DataCriacao = produto.DataCriacao,
                 DataAtualizacao = produto.DataAtualizacao
-            };
+            }).ToList();
         }
 
         public async Task<bool> ApagarProdutoAsync(int IDProduto)
@@ -79,7 +80,7 @@ namespace AuthCM.Application.Service
             produto.NomeProduto = dto.NomeProduto;
             produto.Descricao = dto.Descricao;
             produto.ValorProduto = dto.ValorProduto;
-            produto.DataAtualizacao = DateTime.UTCNow();
+            produto.DataAtualizacao = DateTime.UtcNow;
 
             await _produtoRepository.SalvarAlteracoesAsync();
 
