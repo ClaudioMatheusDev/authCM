@@ -53,6 +53,17 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+const string AngularAppCorsPolicy = "AngularApp";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(AngularAppCorsPolicy, policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
@@ -71,6 +82,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+
+app.UseCors(AngularAppCorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();

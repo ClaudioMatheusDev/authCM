@@ -1,0 +1,30 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-card h1 {
+  font-size: 1.4rem;
+  margin: 0 0 1.25rem;
+}
+
+.auth-card .btn-primary {
+  width: 100%;
+}
+
+.form-group small {
+  color: #7a8092;
+  font-size: 0.78rem;
+}
+
+.switch-link {
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: #5a6072;
+  text-align: center;
+}
