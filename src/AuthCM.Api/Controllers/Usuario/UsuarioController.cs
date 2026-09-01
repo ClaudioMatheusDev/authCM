@@ -1,0 +1,62 @@
+﻿using AuthCM.Application.Dtos;
+using AuthCM.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace AuthCM.Api.Controllers.Usuario
+{
+    [ApiController]
+    [Route("api/usuarios")]
+    public class UsuarioController : ControllerBase
+    {
+        private readonly IUsuarioService _usuarioService;
+
+        public UsuarioController(IUsuarioService usuarioService)
+        {
+            _usuarioService = usuarioService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CriarUsuario([FromBody] UsuarioCriarDto dto)
+        {
+            var idUsuario = await _usuarioService.CriarUsuarioAsync(dto);
+
+            return Ok
+            (new
+            {
+                IDUsuario = idUsuario
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BuscarTodosUsuarios()
+        {
+            var usuarios = await _usuarioService.BuscarUsuarios();
+
+            return Ok(usuarios);
+        }
+
+        [HttpGet("{IDUsuario:int}")]
+        public async Task<IActionResult> BuscarUsuarioPorID(int IDUsuario)
+        {
+            var usuario = await _usuarioService.BuscarUsuarioPorIDAsync(IDUsuario);
+
+            return Ok(usuario);
+        }
+
+        [HttpDelete("{IDUsuario:int}")]
+        public async Task<IActionResult> DeletarUsuario(int IDUsuario)
+        {
+            var usuario = await _usuarioService.ApagarUsuarioAsync(IDUsuario);
+
+            return Ok(usuario); 
+        }
+
+        [HttpPut("{IDUsuario:int}")]
+        public async Task<IActionResult> AtualizarUsuario(int IDUsuario, UsuarioAtualizarDto dto)
+        {
+            var usuario = await _usuarioService.AtualizarUsuarioAsync(IDUsuario, dto);
+
+            return Ok(usuario);
+        }
+    }
+}
