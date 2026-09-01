@@ -1,11 +1,13 @@
 ﻿using AuthCM.Application.Dtos;
 using AuthCM.Application.Interfaces.Services.Produto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthCM.Api.Controllers.Produto
 {
     [ApiController]
     [Route("api/produtos")]
+    [Authorize]
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoService _produtoService;
