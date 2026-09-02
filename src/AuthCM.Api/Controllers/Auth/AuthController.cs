@@ -54,7 +54,7 @@ namespace AuthCM.Api.Controllers.Auth
         private string GenerateJwtToken(IdentityUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"] ?? "Chave_Super_Secreta_E_Longa_Com_Pelo_Menos_32_Caracteres");
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"] ?? "Chavinha_super_secreta");
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
