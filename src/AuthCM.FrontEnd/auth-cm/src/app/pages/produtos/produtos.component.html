@@ -1,0 +1,26 @@
+<section class="painel">
+  <header class="painel-header">
+    <h1>Produtos</h1>
+  </header>
+
+  @if (erro()) {
+    <p class="error-message">{{ erro() }}</p>
+  }
+
+  @if (carregando()) {
+    <p class="estado-vazio">Carregando produtos...</p>
+  } @else if (produtos().length === 0 && !erro()) {
+    <p class="estado-vazio">Nenhum produto cadastrado ainda.</p>
+  } @else {
+    <div class="grid-produtos">
+      @for (produto of produtos(); track produto.idProduto) {
+        <article class="card produto-card">
+          <h2>{{ produto.nomeProduto }}</h2>
+          <p class="descricao">{{ produto.descricao }}</p>
+          <p class="valor">{{ produto.valorProduto | currency: 'BRL' }}</p>
+          <p class="data">Cadastrado em {{ produto.dataCriacao | date: 'dd/MM/yyyy' }}</p>
+        </article>
+      }
+    </div>
+  }
+</section>
