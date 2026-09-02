@@ -1,0 +1,13 @@
+<section class="hero">
+  <h1>Bem-vindo ao AuthCM</h1>
+  <p>Gerencie o catálogo de produtos da sua loja com autenticação segura via JWT.</p>
+
+  @if (authService.logado()) {
+    <a routerLink="/produtos" class="btn-primary">Ver painel de produtos</a>
+  } @else {
+    <div class="hero-actions">
+      <a routerLink="/login" class="btn-primary">Entrar</a>
+      <a routerLink="/registro" class="btn-secondary">Criar conta</a>
+    </div>
+  }
+</section>

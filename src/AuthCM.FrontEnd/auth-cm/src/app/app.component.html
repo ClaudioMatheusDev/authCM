@@ -1,0 +1,19 @@
+<header class="topbar">
+  <a routerLink="/" class="brand">AuthCM</a>
+
+  <nav class="nav-links">
+    <a routerLink="/">Início</a>
+
+    @if (authService.logado()) {
+      <a routerLink="/produtos">Produtos</a>
+      <button type="button" class="link-button" (click)="sair()">Sair</button>
+    } @else {
+      <a routerLink="/login">Entrar</a>
+      <a routerLink="/registro">Criar conta</a>
+    }
+  </nav>
+</header>
+
+<main class="content">
+  <router-outlet />
+</main>
